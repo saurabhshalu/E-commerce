@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Card from './components/Card'
+import Header from './components/Header'
 
-function App() {
+const items = [
+  {id:1, name: 'Item1', description: 'this is item 1', price: 110,},
+  {id:2, name: 'Item2', description: 'this is item 2', price: 105,},
+  {id:3, name: 'Item3', description: 'this is item 3', price: 101,},
+  {id:4, name: 'Item4', description: 'this is item 4', price: 100,},
+  {id:5, name: 'Item5', description: 'this is item 5', price: 110,},
+  {id:6, name: 'Item6', description: 'this is item 6', price: 105,},
+  {id:7, name: 'Item7', description: 'this is item 7', price: 101,},
+  {id:8, name: 'Item8', description: 'this is item 8', price: 100,},
+  {id:9, name: 'Item9', description: 'this is item 9', price: 110,},
+  {id:10, name: 'Item10', description: 'this is item 10', price: 105,},
+  {id:11, name: 'Item11', description: 'this is item 11', price: 101,},
+  {id:12, name: 'Item12', description: 'this is item 12', price: 100,}
+
+]
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Header/>
+      {/* <div className="flex flex-wrap justify-around">
+        {items.map(item=><Card key={item.id} {...item}/>)}
+      </div> */}
+      <div className="flex flex-wrap justify-around">
+      {items.map(item=><Card key={item.id} {...item}/>)}
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
+
