@@ -1,14 +1,38 @@
-import React from "react";
+// import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Loader from "../components/Loader";
+import ErrorMessage from "../components/Message/ErrorMessage";
 import Product from "../components/Product";
-import products from "../products";
+import { fetchProductList } from "../redux/ProductListSlice";
 
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(fetchProductList());
+  }, [dispatch]);
+
+  const { products, loading, error } = useSelector(
+    (state) => state.productList
+  );
+
+  if (loading) {
+    return <Loader />;
+  }
+  if (error) {
+    return <ErrorMessage text={error} />;
+  }
+  if (products.length === 0) {
+    return (
+      <div>There is no products to display, please come back in some time.</div>
+    );
+  }
+
   return (
     <div>
-      <h1>Latest Products</h1>
-      <div className="flex flex-wrap justify-around">
+      <div className="flex flex-wrap justify-center justify-items-start">
         {products.map((product) => (
-          <Product key={product.id} product={product} />
+          <Product key={product._id} product={product} />
         ))}
       </div>
     </div>
