@@ -1,6 +1,7 @@
 import CartSlice from "./CartSlice";
 import productListSlice from "./ProductListSlice";
 import ProductSlice from "./ProductSlice";
+import userDetailsSlice from "./userDetailsSlice";
 import UserRegisterSlice from "./UserRegisterSlice";
 import UserSlice from "./UserSlice";
 
@@ -14,6 +15,7 @@ const store = configureStore({
     cart: CartSlice,
     user: UserSlice,
     userRegister: UserRegisterSlice,
+    userDetails: userDetailsSlice,
   },
 });
 

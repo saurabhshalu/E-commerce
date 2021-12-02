@@ -44,7 +44,7 @@ const ProductScreen = () => {
         alt={product.name}
       />
       <p>{product.description}</p>
-      <h3>Price: ${product.price}</h3>
+      <h3>Price: ₹{product.price}</h3>
 
       <button
         onClick={addToCartHandler}

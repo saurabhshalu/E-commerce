@@ -56,12 +56,12 @@ const CartScreen = () => {
                 <h3 className="hover:underline">
                   <Link to={`/product/${item.product}`}>{item.name}</Link>
                 </h3>
-                <p>Price: {item.price}</p>
+                <p>Price: ₹{item.price}</p>
                 <p>Qty: {item.qty}</p>
                 <select
                   value={item.qty}
-                  name="price"
-                  id="price"
+                  name="qty"
+                  id="qty"
                   onChange={(e) => {
                     dispatch(
                       addToCart({ id: item.product, qty: +e.target.value })
@@ -89,6 +89,7 @@ const CartScreen = () => {
               Items
             </h2>
             <p className="text-xl font-bold">
+              ₹
               {cartItems
                 .reduce((acc, item) => acc + item.qty * item.price, 0)
                 .toFixed(2)}

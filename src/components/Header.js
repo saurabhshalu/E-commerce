@@ -1,15 +1,17 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../redux/UserSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { userInfo } = useSelector((state) => state.user);
 
   const logoutHandler = () => {
     dispatch(logout());
+    navigate("/");
   };
   return (
     <nav className="bg-gray-900 h-16 flex items-center justify-between text-white p-8 fixed w-full z-10">
@@ -18,7 +20,9 @@ const Header = () => {
       </div>
       <div className="flex items-center">
         <ul className="flex items-center">
-          <li className="pl-4">Home</li>
+          <li className="pl-4">
+            <Link to="/">Home</Link>
+          </li>
           <li className="pl-4">
             <Link to="/cart">Cart</Link>
           </li>

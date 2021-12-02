@@ -5,6 +5,10 @@ const initialState = {
   cartItems: localStorage.getItem("cartItems")
     ? JSON.parse(localStorage.getItem("cartItems"))
     : [],
+  shippingAddress: localStorage.getItem("shippingAddress")
+    ? JSON.parse(localStorage.getItem("shippingAddress"))
+    : {},
+  paymentMethod: localStorage.getItem("paymentMethod") || null,
 };
 
 const cartSlice = createSlice({
@@ -29,10 +33,37 @@ const cartSlice = createSlice({
         state.cartItems.splice(itemIndex, 1);
       }
     },
+    SAVE_SHIPPING_ADDRESS: (state, { payload }) => {
+      state.shippingAddress = payload;
+    },
+    SAVE_PAYMENT_METHOD: (state, { payload }) => {
+      state.paymentMethod = payload;
+    },
   },
 });
 
-const { CART_ADD_ITEM, CART_REMOVE_ITEM } = cartSlice.actions;
+const {
+  CART_ADD_ITEM,
+  CART_REMOVE_ITEM,
+  SAVE_SHIPPING_ADDRESS,
+  SAVE_PAYMENT_METHOD,
+} = cartSlice.actions;
+
+export const saveShippingAddress = createAsyncThunk(
+  "cart/saveAddress",
+  async (data, thunkAPI) => {
+    localStorage.setItem("shippingAddress", JSON.stringify(data));
+    thunkAPI.dispatch(SAVE_SHIPPING_ADDRESS(data));
+  }
+);
+
+export const savePaymentMethod = createAsyncThunk(
+  "cart/savePaymentMethod",
+  async (data, thunkAPI) => {
+    localStorage.setItem("paymentMethod", data);
+    thunkAPI.dispatch(SAVE_PAYMENT_METHOD(data));
+  }
+);
 
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
