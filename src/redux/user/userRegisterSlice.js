@@ -1,5 +1,5 @@
 import axios from "axios";
-import { USER_LOGIN } from "./UserSlice";
+import { USER_LOGIN } from "./userSlice";
 
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 const initialState = {

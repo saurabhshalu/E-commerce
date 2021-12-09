@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import InformationMessage from "../components/Message/InformationMessage";
-import { addToCart, removeFromCart } from "../redux/CartSlice";
+import { addToCart, removeFromCart } from "../redux/order/cartSlice";
 
 const CartScreen = () => {
   const dispatch = useDispatch();

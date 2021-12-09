@@ -1,9 +1,11 @@
-import CartSlice from "./CartSlice";
-import productListSlice from "./ProductListSlice";
-import ProductSlice from "./ProductSlice";
-import userDetailsSlice from "./userDetailsSlice";
-import UserRegisterSlice from "./UserRegisterSlice";
-import UserSlice from "./UserSlice";
+import cartSlice from "./order/cartSlice";
+import createOrderSlice from "./order/createOrderSlice";
+import orderDetailSlice from "./order/orderDetailSlice";
+import productListSlice from "./product/productListSlice";
+import ProductSlice from "./product/productSlice";
+import userDetailsSlice from "./user/userDetailsSlice";
+import userRegisterSlice from "./user/userRegisterSlice";
+import userSlice from "./user/userSlice";
 
 const { configureStore } = require("@reduxjs/toolkit");
 
@@ -12,10 +14,12 @@ const store = configureStore({
   reducer: {
     productList: productListSlice,
     productItem: ProductSlice,
-    cart: CartSlice,
-    user: UserSlice,
-    userRegister: UserRegisterSlice,
+    cart: cartSlice,
+    user: userSlice,
+    userRegister: userRegisterSlice,
     userDetails: userDetailsSlice,
+    orderCreate: createOrderSlice,
+    orderDetails: orderDetailSlice,
   },
 });
 

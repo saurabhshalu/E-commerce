@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { logout } from "../redux/UserSlice";
+import { logout } from "../redux/user/userSlice";
 
 const Header = () => {
   const dispatch = useDispatch();

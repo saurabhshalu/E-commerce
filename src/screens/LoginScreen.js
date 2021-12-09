@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/Message/ErrorMessage";
-import { login } from "../redux/UserSlice";
+import { login } from "../redux/user/userSlice";
 const LoginScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

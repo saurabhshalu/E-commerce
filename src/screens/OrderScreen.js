@@ -1,54 +1,33 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import CheckoutSteps from "../components/CheckoutSteps";
+import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../components/Loader";
 import ErrorMessage from "../components/Message/ErrorMessage";
-import { createOrder } from "../redux/order/createOrderSlice";
+import { getOrderDetails } from "../redux/order/orderDetailSlice";
 
-const PlaceOrderScreen = () => {
+const OrderScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const cart = useSelector((state) => state.cart);
-  const itemsPrice = cart.cartItems
-    .reduce((acc, item) => acc + item.qty * item.price, 0)
-    .toFixed(2);
-  const shippingPrice = (itemsPrice > 100 ? 0 : 100).toFixed(2);
-  const taxPrice = (0.15 * itemsPrice).toFixed(2);
-  const totalPrice = (
-    Number(itemsPrice) +
-    Number(shippingPrice) +
-    Number(taxPrice)
-  ).toFixed(2);
+  const { id } = useParams();
 
-  const orderCreate = useSelector((state) => state.orderCreate);
-  const { order, success, error } = orderCreate;
+  const orderDetails = useSelector((state) => state.orderDetails);
+  const { order, loading, error } = orderDetails;
 
   useEffect(() => {
-    if (success) {
-      navigate(`/order/${order._id}`);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [success, navigate]);
+    dispatch(getOrderDetails(id));
+  }, [dispatch, id]);
 
-  const placeOrderHandler = () => {
-    dispatch(
-      createOrder({
-        orderItems: cart.cartItems,
-        shippingAddress: cart.shippingAddress,
-        paymentMethod: cart.paymentMethod,
-        itemsPrice,
-        shippingPrice,
-        taxPrice,
-        totalPrice,
-      })
-    );
-  };
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (error) {
+    return <ErrorMessage>{error}</ErrorMessage>;
+  }
 
   return (
     <>
-      <div className="flex p-6 flex-col items-center">
-        <CheckoutSteps step1 step2 step3 step4 />
-      </div>
+      <h1 className="text-2xl m-4 ">Order {order._id}</h1>
       <div className="flex">
         <div className="flex-1">
           <div className="p-6">
@@ -56,9 +35,9 @@ const PlaceOrderScreen = () => {
             <div className="mb-2">
               <span>Address: </span>
               <span className="font-light">
-                {cart.shippingAddress.address}, {cart.shippingAddress.city},
-                {cart.shippingAddress.postalCode},{" "}
-                {cart.shippingAddress.country}
+                {order.shippingAddress.address}, {order.shippingAddress.city},
+                {order.shippingAddress.postalCode},{" "}
+                {order.shippingAddress.country}
               </span>
             </div>
             <hr />
@@ -67,17 +46,17 @@ const PlaceOrderScreen = () => {
             <h1 className="text-2xl mb-2">PAYMENT METHOD</h1>
             <div className="mb-2">
               <span>Method: </span>
-              <span className="font-light">{cart.paymentMethod}</span>
+              <span className="font-light">{order.paymentMethod}</span>
             </div>
             <hr />
           </div>
           <div className="p-6">
             <h1 className="text-2xl mb-2">ORDER ITEMS</h1>
             <div className="mx-4">
-              {cart.cartItems.length === 0 ? (
-                <ErrorMessage>Your cart is empty</ErrorMessage>
+              {order.orderItems.length === 0 ? (
+                <ErrorMessage>Order is empty</ErrorMessage>
               ) : (
-                cart.cartItems.map((item) => (
+                order.orderItems.map((item) => (
                   <div key={item.product} className="mb-4">
                     <div className="flex mb-2 items-center">
                       <img
@@ -103,32 +82,23 @@ const PlaceOrderScreen = () => {
             <hr />
             <div className="py-2 flex">
               <div className="flex-1">Items</div>
-              <div className="flex-1">₹{itemsPrice}</div>
+              <div className="flex-1">₹{order.itemsPrice}</div>
             </div>
             <hr />
             <div className="py-2 flex">
               <div className="flex-1">Shipping</div>
-              <div className="flex-1">₹{shippingPrice}</div>
+              <div className="flex-1">₹{order.shippingPrice}</div>
             </div>
             <hr />
             <div className="py-2 flex">
               <div className="flex-1">Tax</div>
-              <div className="flex-1">₹{taxPrice}</div>
+              <div className="flex-1">₹{order.taxPrice}</div>
             </div>
             <hr />
             <div className="py-2 flex">
               <div className="flex-1">Total</div>
-              <div className="flex-1">₹{totalPrice}</div>
+              <div className="flex-1">₹{order.totalPrice}</div>
             </div>
-            <hr />
-            <br />
-            {error && <ErrorMessage>{error}</ErrorMessage>}
-            <button
-              onClick={placeOrderHandler}
-              className="bg-gray-900 text-white w-full py-4 font-bold hover:bg-gray-700"
-            >
-              PLACE ORDER
-            </button>
           </div>
         </div>
       </div>
@@ -136,4 +106,4 @@ const PlaceOrderScreen = () => {
   );
 };
 
-export default PlaceOrderScreen;
+export default OrderScreen;

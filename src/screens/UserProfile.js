@@ -7,7 +7,7 @@ import {
   getUserDetails,
   updateProfile,
   USER_UPDATE_PROFILE_RESET,
-} from "../redux/userDetailsSlice";
+} from "../redux/user/userDetailsSlice";
 
 const UserProfile = () => {
   const dispatch = useDispatch();

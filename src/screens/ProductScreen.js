@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/Message/ErrorMessage";
-import { fetchProductById } from "../redux/ProductSlice";
+import { fetchProductById } from "../redux/product/productSlice";
 
 const ProductScreen = () => {
   const params = useParams();

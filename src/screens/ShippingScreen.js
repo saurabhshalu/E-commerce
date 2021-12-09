@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import CheckoutSteps from "../components/CheckoutSteps";
-import { saveShippingAddress } from "../redux/CartSlice";
+import { saveShippingAddress } from "../redux/order/cartSlice";
 
 const ShippingScreen = () => {
   const navigate = useNavigate();
@@ -10,11 +10,13 @@ const ShippingScreen = () => {
   const { shippingAddress } = useSelector((state) => state.cart);
   const [address, setAddress] = useState(shippingAddress.address || "");
   const [city, setCity] = useState(shippingAddress.city || "");
-  const [postal, setPostal] = useState(shippingAddress.postal || "");
+  const [postalCode, setPostalCode] = useState(
+    shippingAddress.postalCode || ""
+  );
   const [country, setCountry] = useState(shippingAddress.country || "");
 
   const saveShippingHandler = () => {
-    dispatch(saveShippingAddress({ address, city, postal, country }));
+    dispatch(saveShippingAddress({ address, city, postalCode, country }));
     navigate("/payment");
   };
   return (
@@ -39,8 +41,8 @@ const ShippingScreen = () => {
         />
         <br />
         <input
-          value={postal}
-          onChange={(e) => setPostal(e.target.value)}
+          value={postalCode}
+          onChange={(e) => setPostalCode(e.target.value)}
           className="border-2 rounded-md p-2 m-2"
           type="text"
           placeholder="Postal Code"
