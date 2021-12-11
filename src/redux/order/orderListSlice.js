@@ -2,13 +2,13 @@ const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 const { default: axios } = require("axios");
 const initialState = {
   loading: false,
-  success: false,
+  orders: [],
   error: null,
 };
 
-export const deleteUser = createAsyncThunk(
-  "user/delete",
-  async (id, thunkAPI) => {
+export const getOrderList = createAsyncThunk(
+  "order/getOrderList",
+  async (_, thunkAPI) => {
     try {
       const config = {
         headers: {
@@ -16,7 +16,7 @@ export const deleteUser = createAsyncThunk(
           Authorization: `Bearer ${thunkAPI.getState().user.userInfo.token}`,
         },
       };
-      const { data } = await axios.delete(`/api/users/${id}`, config);
+      const { data } = await axios.get(`/api/orders`, config);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -27,26 +27,25 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
-const userDeleteSlice = createSlice({
-  name: "userDelete",
+const orderListSlice = createSlice({
+  name: "orderList",
   initialState,
   reducers: {
     reset: () => initialState,
   },
   extraReducers: {
-    [deleteUser.pending]: (state) => {
+    [getOrderList.pending]: (state) => {
       state.loading = true;
-      state.success = false;
     },
-    [deleteUser.fulfilled]: (state) => {
+    [getOrderList.fulfilled]: (state, action) => {
       state.loading = false;
-      state.success = true;
+      state.orders = action.payload;
     },
-    [deleteUser.rejected]: (state, action) => {
+    [getOrderList.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
   },
 });
-export const { reset } = userDeleteSlice.actions;
-export default userDeleteSlice.reducer;
+export const { reset } = orderListSlice.actions;
+export default orderListSlice.reducer;

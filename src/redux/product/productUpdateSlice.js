@@ -3,12 +3,13 @@ const { default: axios } = require("axios");
 const initialState = {
   loading: false,
   success: false,
+  product: null,
   error: null,
 };
 
-export const deleteUser = createAsyncThunk(
-  "user/delete",
-  async (id, thunkAPI) => {
+export const updateProduct = createAsyncThunk(
+  "product/update",
+  async ({ id, payload }, thunkAPI) => {
     try {
       const config = {
         headers: {
@@ -16,7 +17,7 @@ export const deleteUser = createAsyncThunk(
           Authorization: `Bearer ${thunkAPI.getState().user.userInfo.token}`,
         },
       };
-      const { data } = await axios.delete(`/api/users/${id}`, config);
+      const { data } = await axios.put(`/api/products/${id}`, payload, config);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -27,26 +28,27 @@ export const deleteUser = createAsyncThunk(
     }
   }
 );
-const userDeleteSlice = createSlice({
-  name: "userDelete",
+const productUpdateSlice = createSlice({
+  name: "productUpdate",
   initialState,
   reducers: {
     reset: () => initialState,
   },
   extraReducers: {
-    [deleteUser.pending]: (state) => {
+    [updateProduct.pending]: (state) => {
       state.loading = true;
       state.success = false;
     },
-    [deleteUser.fulfilled]: (state) => {
+    [updateProduct.fulfilled]: (state, action) => {
       state.loading = false;
       state.success = true;
+      state.product = action.payload;
     },
-    [deleteUser.rejected]: (state, action) => {
+    [updateProduct.rejected]: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     },
   },
 });
-export const { reset } = userDeleteSlice.actions;
-export default userDeleteSlice.reducer;
+export const { reset } = productUpdateSlice.actions;
+export default productUpdateSlice.reducer;

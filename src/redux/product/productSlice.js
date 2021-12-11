@@ -29,7 +29,6 @@ const productSlice = createSlice({
   extraReducers: {
     [fetchProductById.pending]: (state) => {
       state.loading = true;
-      state.product = { reviews: [] };
       state.error = null;
     },
     [fetchProductById.fulfilled]: (state, action) => {

@@ -5,37 +5,26 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/Message/ErrorMessage";
-import { deleteUser } from "../redux/user/userDeleteSlice";
-import { getUserList } from "../redux/user/userListSlice";
+import { getOrderList } from "../redux/order/orderListSlice";
 
-const UserListScreen = () => {
+const OrderListScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, users, error } = useSelector((state) => state.userList);
-  const { success: deleteSuccess, error: deleteError } = useSelector(
-    (state) => state.userDelete
-  );
+  const { loading, orders, error } = useSelector((state) => state.orderList);
 
   const { userInfo } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (userInfo && userInfo.isAdmin) {
-      dispatch(getUserList());
+      dispatch(getOrderList());
     } else {
       navigate("/login");
     }
-  }, [dispatch, navigate, userInfo, deleteSuccess]);
-
-  const deleteHandler = (id) => {
-    if (window.confirm("Are you sure want to delete?")) {
-      dispatch(deleteUser(id));
-    }
-  };
+  }, [dispatch, navigate, userInfo]);
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl mb-4">Users</h1>
-      {deleteError && <ErrorMessage>{deleteError}</ErrorMessage>}
+      <h1 className="text-2xl mb-4">Orders</h1>
       {loading ? (
         <Loader />
       ) : error ? (
@@ -81,7 +70,7 @@ const UserListScreen = () => {
                   tracking-wider
                 "
                       >
-                        Name
+                        USER
                       </th>
                       <th
                         scope="col"
@@ -95,7 +84,7 @@ const UserListScreen = () => {
                   tracking-wider
                 "
                       >
-                        Email
+                        DATE
                       </th>
                       <th
                         scope="col"
@@ -109,7 +98,35 @@ const UserListScreen = () => {
                   tracking-wider
                 "
                       >
-                        Admin
+                        TOTAL PRICE
+                      </th>
+                      <th
+                        scope="col"
+                        className="
+                  px-6
+                  py-3
+                  text-left text-xs
+                  font-medium
+                  text-gray-500
+                  uppercase
+                  tracking-wider
+                "
+                      >
+                        Paid
+                      </th>
+                      <th
+                        scope="col"
+                        className="
+                  px-6
+                  py-3
+                  text-left text-xs
+                  font-medium
+                  text-gray-500
+                  uppercase
+                  tracking-wider
+                "
+                      >
+                        Delivered
                       </th>
 
                       <th scope="col" className="relative px-6 py-3">
@@ -118,29 +135,45 @@ const UserListScreen = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {users.map((user) => (
-                      <tr key={user._id}>
+                    {orders.map((order) => (
+                      <tr key={order._id}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="ml-4">
                               <div className="text-sm font-medium text-gray-900">
-                                {user._id}
+                                {order._id}
                               </div>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-500">
-                            {user.name}
+                            {order.user && order.user.name}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-500">
+                            {order.createdAt.substring(0, 10)}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-500">
+                            {order.totalPrice}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <a href={`mailto:${user.email}`}>{user.email}</a>
+                          {order.isPaid ? (
+                            <span className="font-bold text-green-700">
+                              {order.paidAt.substring(0, 10)}
+                            </span>
+                          ) : (
+                            "NO"
+                          )}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {user.isAdmin ? (
+                          {order.isDelivered ? (
                             <span className="font-bold text-green-700">
-                              YES
+                              {order.deliveredAt.substring(0, 10)}
                             </span>
                           ) : (
                             "NO"
@@ -156,19 +189,11 @@ const UserListScreen = () => {
                 "
                         >
                           <Link
-                            to={`/admin/user/${user._id}/edit`}
+                            to={`/order/${order._id}`}
                             className="text-indigo-600 hover:text-indigo-900"
                           >
-                            Edit
+                            Details
                           </Link>
-                          <button
-                            onClick={() => {
-                              deleteHandler(user._id);
-                            }}
-                            className="text-red-600 hover:text-red-900 ml-4"
-                          >
-                            Delete
-                          </button>
                         </td>
                       </tr>
                     ))}
@@ -183,4 +208,4 @@ const UserListScreen = () => {
   );
 };
 
-export default UserListScreen;
+export default OrderListScreen;

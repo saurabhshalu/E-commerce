@@ -7,7 +7,11 @@ import ErrorMessage from "../components/Message/ErrorMessage";
 import SuccessMessage from "../components/Message/SuccessMessage";
 import { getOrderDetails } from "../redux/order/orderDetailSlice";
 import { PayPalButton } from "react-paypal-button-v2";
-import { payOrder, reset } from "../redux/order/orderPaySlice";
+import { payOrder, reset as resetPay } from "../redux/order/orderPaySlice";
+import {
+  deliverOrder,
+  reset as resetDeliver,
+} from "../redux/order/orderDeliverSlice";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
@@ -15,6 +19,12 @@ const OrderScreen = () => {
   const [sdkReady, setSdkReady] = useState(false);
   const { loading: loadingPay, success: successPay } = useSelector(
     (state) => state.orderPay
+  );
+
+  const { userInfo } = useSelector((state) => state.user);
+
+  const { loading: loadingDeliver, success: successDeliver } = useSelector(
+    (state) => state.orderDeliver
   );
 
   const orderDetails = useSelector((state) => state.orderDetails);
@@ -33,8 +43,10 @@ const OrderScreen = () => {
       document.body.appendChild(script);
     };
 
-    if (!order || order._id !== id || successPay) {
-      dispatch(reset());
+    if (!order || order._id !== id || successPay || successDeliver) {
+      dispatch(resetPay());
+      dispatch(resetDeliver());
+
       dispatch(getOrderDetails(id));
     } else if (!order.isPaid) {
       if (!window.paypal) {
@@ -43,11 +55,15 @@ const OrderScreen = () => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, id, order, successPay]);
+  }, [dispatch, id, order, successPay, successDeliver]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);
     dispatch(payOrder({ id, paymentResult }));
+  };
+
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order._id));
   };
 
   if (loading) {
@@ -171,6 +187,18 @@ const OrderScreen = () => {
                     onSuccess={successPaymentHandler}
                   />
                 )}
+              </div>
+            )}
+            {userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+              <div className="py-2 flex justify-center flex-col">
+                {loadingDeliver && <Loader />}
+                <button
+                  disabled={loadingDeliver}
+                  className="bg-gray-900 hover:bg-gray-700 text-white w-full py-4 rounded-md font-bold"
+                  onClick={deliverHandler}
+                >
+                  Mark as Delivered
+                </button>
               </div>
             )}
           </div>

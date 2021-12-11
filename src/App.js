@@ -6,12 +6,16 @@ import CartScreen from "./screens/CartScreen";
 import HomeScreen from "./screens/HomeScreen";
 import Layout from "./screens/Layout";
 import LoginScreen from "./screens/LoginScreen";
+import OrderListScreen from "./screens/OrderListScreen";
 import OrderScreen from "./screens/OrderScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PlaceOrderScreen from "./screens/PlaceOrderScreen";
+import ProductEditScreen from "./screens/ProductEditScreen";
+import ProductListScreen from "./screens/ProductListScreen";
 import ProductScreen from "./screens/ProductScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ShippingScreen from "./screens/ShippingScreen";
+import UserEditScreen from "./screens/UserEditScreen";
 import UserListScreen from "./screens/UserListScreen";
 import UserProfile from "./screens/UserProfile";
 
@@ -38,6 +42,13 @@ const App = () => {
               <Route path="cart" element={<CartScreen />} />
               <Route path="cart/:id" element={<CartScreen />} />
               <Route path="admin/userList" element={<UserListScreen />} />
+              <Route path="admin/productList" element={<ProductListScreen />} />
+              <Route path="admin/orderList" element={<OrderListScreen />} />
+              <Route
+                path="admin/product/:id/edit"
+                element={<ProductEditScreen />}
+              />
+              <Route path="admin/user/:id/edit" element={<UserEditScreen />} />
 
               <Route path="*" element={<div>404 NOT FOUND!</div>} />
             </Route>
