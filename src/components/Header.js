@@ -33,14 +33,56 @@ const Header = () => {
           ) : (
             <div className="pl-4">
               <div className="dropdown">
-                <button className="dropbtn">
-                  <b>{userInfo.name} V</b>
+                <button className="dropbtn flex">
+                  <b>{userInfo.name}</b>
+                  <svg
+                    viewBox="0 0 140 140"
+                    width="15"
+                    height="25"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="ml-1"
+                  >
+                    <g>
+                      <path
+                        d="m121.3,34.6c-1.6-1.6-4.2-1.6-5.8,0l-51,51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8,0-1.6,1.6-1.6,4.2 0,5.8l53.9,53.9c0.8,0.8 1.8,1.2 2.9,1.2 1,0 2.1-0.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2 0.1-5.8z"
+                        fill="white"
+                      />
+                    </g>
+                  </svg>
                 </button>
                 <div className="dropdown-content">
                   <Link to="profile">Profile</Link>
                   <button className="w-full text-left" onClick={logoutHandler}>
                     Logout
                   </button>
+                </div>
+              </div>
+            </div>
+          )}
+          {userInfo && userInfo.isAdmin && (
+            <div>
+              <div className="dropdown">
+                <button className="dropbtn flex">
+                  <b>Admin</b>
+                  <svg
+                    viewBox="0 0 140 140"
+                    width="15"
+                    height="25"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="ml-1"
+                  >
+                    <g>
+                      <path
+                        d="m121.3,34.6c-1.6-1.6-4.2-1.6-5.8,0l-51,51.1-51.1-51.1c-1.6-1.6-4.2-1.6-5.8,0-1.6,1.6-1.6,4.2 0,5.8l53.9,53.9c0.8,0.8 1.8,1.2 2.9,1.2 1,0 2.1-0.4 2.9-1.2l53.9-53.9c1.7-1.6 1.7-4.2 0.1-5.8z"
+                        fill="white"
+                      />
+                    </g>
+                  </svg>
+                </button>
+                <div className="dropdown-content">
+                  <Link to="admin/userList">Users</Link>
+                  <Link to="admin/productList">Products</Link>
+                  <Link to="admin/orderList">Orders</Link>
                 </div>
               </div>
             </div>

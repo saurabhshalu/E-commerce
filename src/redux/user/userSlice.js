@@ -1,4 +1,7 @@
 import axios from "axios";
+import { reset as resetMyOrders } from "../order/myOrderSlice";
+import { reset as resetUser } from "./userDetailsSlice";
+import { reset as resetUserList } from "./userListSlice";
 
 const { createSlice, createAsyncThunk } = require("@reduxjs/toolkit");
 
@@ -39,7 +42,10 @@ export const login = createAsyncThunk(
 
 export const logout = createAsyncThunk("user/logout", async (_, thunkAPI) => {
   localStorage.removeItem("userInfo");
+  thunkAPI.dispatch(resetUser());
+  thunkAPI.dispatch(resetMyOrders());
   thunkAPI.dispatch(USER_LOGOUT());
+  thunkAPI.dispatch(resetUserList());
 });
 
 const userSlice = createSlice({

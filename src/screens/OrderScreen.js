@@ -1,21 +1,54 @@
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import ErrorMessage from "../components/Message/ErrorMessage";
+import SuccessMessage from "../components/Message/SuccessMessage";
 import { getOrderDetails } from "../redux/order/orderDetailSlice";
+import { PayPalButton } from "react-paypal-button-v2";
+import { payOrder, reset } from "../redux/order/orderPaySlice";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { id } = useParams();
+  const [sdkReady, setSdkReady] = useState(false);
+  const { loading: loadingPay, success: successPay } = useSelector(
+    (state) => state.orderPay
+  );
 
   const orderDetails = useSelector((state) => state.orderDetails);
   const { order, loading, error } = orderDetails;
 
   useEffect(() => {
-    dispatch(getOrderDetails(id));
-  }, [dispatch, id]);
+    const addPaypalScript = async () => {
+      const { data: clientId } = await axios.get("/api/config/paypal");
+      const script = document.createElement("script");
+      script.type = "text/javascript";
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.async = true;
+      script.onload = () => {
+        setSdkReady(true);
+      };
+      document.body.appendChild(script);
+    };
+
+    if (!order || order._id !== id || successPay) {
+      dispatch(reset());
+      dispatch(getOrderDetails(id));
+    } else if (!order.isPaid) {
+      if (!window.paypal) {
+        addPaypalScript();
+      } else {
+        setSdkReady(true);
+      }
+    }
+  }, [dispatch, id, order, successPay]);
+
+  const successPaymentHandler = (paymentResult) => {
+    console.log(paymentResult);
+    dispatch(payOrder({ id, paymentResult }));
+  };
 
   if (loading) {
     return <Loader />;
@@ -32,6 +65,13 @@ const OrderScreen = () => {
         <div className="flex-1">
           <div className="p-6">
             <h1 className="text-2xl mb-2">SHIPPING</h1>
+            <p>
+              <strong>Name: </strong> {order.user.name}
+            </p>
+            <p>
+              <strong>Email: </strong>{" "}
+              <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+            </p>
             <div className="mb-2">
               <span>Address: </span>
               <span className="font-light">
@@ -40,6 +80,15 @@ const OrderScreen = () => {
                 {order.shippingAddress.country}
               </span>
             </div>
+            <div>
+              {order.isDelivered ? (
+                <SuccessMessage>
+                  Delivered On: {order.deliveredAt}
+                </SuccessMessage>
+              ) : (
+                <ErrorMessage>Not Delivered</ErrorMessage>
+              )}
+            </div>
             <hr />
           </div>
           <div className="p-6">
@@ -47,6 +96,13 @@ const OrderScreen = () => {
             <div className="mb-2">
               <span>Method: </span>
               <span className="font-light">{order.paymentMethod}</span>
+            </div>
+            <div>
+              {order.isPaid ? (
+                <SuccessMessage>Paid On: {order.paidAt}</SuccessMessage>
+              ) : (
+                <ErrorMessage>Not Paid</ErrorMessage>
+              )}
             </div>
             <hr />
           </div>
@@ -82,7 +138,12 @@ const OrderScreen = () => {
             <hr />
             <div className="py-2 flex">
               <div className="flex-1">Items</div>
-              <div className="flex-1">₹{order.itemsPrice}</div>
+              <div className="flex-1">
+                ₹
+                {order.orderItems
+                  .reduce((acc, item) => acc + item.qty * item.price, 0)
+                  .toFixed(2)}
+              </div>
             </div>
             <hr />
             <div className="py-2 flex">
@@ -99,6 +160,19 @@ const OrderScreen = () => {
               <div className="flex-1">Total</div>
               <div className="flex-1">₹{order.totalPrice}</div>
             </div>
+            {!order.isPaid && (
+              <div className="py-2 flex justify-center">
+                {loadingPay && <Loader />}
+                {!sdkReady ? (
+                  <Loader />
+                ) : (
+                  <PayPalButton
+                    amount={order.totalPrice}
+                    onSuccess={successPaymentHandler}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

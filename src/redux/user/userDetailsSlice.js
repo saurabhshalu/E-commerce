@@ -64,6 +64,7 @@ const userDetailsSlice = createSlice({
   name: "userDetails",
   initialState,
   reducers: {
+    reset: () => initialState,
     USER_UPDATE_PROFILE_RESET: (state) => {
       state.updatedProfile.success = false;
       state.updatedProfile.error = null;
@@ -100,6 +101,6 @@ const userDetailsSlice = createSlice({
   },
 });
 
-export const { USER_UPDATE_PROFILE_RESET } = userDetailsSlice.actions;
+export const { reset, USER_UPDATE_PROFILE_RESET } = userDetailsSlice.actions;
 
 export default userDetailsSlice.reducer;

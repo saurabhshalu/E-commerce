@@ -12,6 +12,7 @@ import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 import ProductScreen from "./screens/ProductScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import ShippingScreen from "./screens/ShippingScreen";
+import UserListScreen from "./screens/UserListScreen";
 import UserProfile from "./screens/UserProfile";
 
 const App = () => {
@@ -36,6 +37,7 @@ const App = () => {
               <Route path="product/:id" element={<ProductScreen />} />
               <Route path="cart" element={<CartScreen />} />
               <Route path="cart/:id" element={<CartScreen />} />
+              <Route path="admin/userList" element={<UserListScreen />} />
 
               <Route path="*" element={<div>404 NOT FOUND!</div>} />
             </Route>
