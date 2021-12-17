@@ -8,6 +8,7 @@ import orderPaySlice from "./order/orderPaySlice";
 import productCreateSlice from "./product/productCreateSlice";
 import productDeleteSlice from "./product/productDeleteSlice";
 import productListSlice from "./product/productListSlice";
+import productReviewCreateSlice from "./product/productReviewCreateSlice";
 import ProductSlice from "./product/productSlice";
 import productUpdateSlice from "./product/productUpdateSlice";
 import userDeleteSlice from "./user/userDeleteSlice";
@@ -27,6 +28,8 @@ const store = configureStore({
     productDelete: productDeleteSlice,
     productCreate: productCreateSlice,
     productUpdate: productUpdateSlice,
+    productReviewCreate: productReviewCreateSlice,
+
     cart: cartSlice,
     user: userSlice,
     userList: userListSlice,
@@ -34,6 +37,7 @@ const store = configureStore({
     userRegister: userRegisterSlice,
     userDetails: userDetailsSlice,
     userUpdate: userUpdateSlice,
+
     orderCreate: createOrderSlice,
     orderDetails: orderDetailSlice,
     orderPay: orderPaySlice,
